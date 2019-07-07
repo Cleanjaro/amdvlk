@@ -70,8 +70,8 @@ build() {
 
 package() {
   install -m755 -d "${pkgdir}"/usr/lib
-  install -m644 -d "${pkgdir}"/usr/share/vulkan/icd.d
-  install -m644 -d "${pkgdir}"/usr/share/licenses/amdvlk
+  install -m755 -d "${pkgdir}"/usr/share/vulkan/icd.d
+  install -m755 -d "${pkgdir}"/usr/share/licenses/amdvlk
   install -m755 -d "${pkgdir}"/etc/amd
 
   install xgl/builds/Release64/icd/amdvlk64.so "${pkgdir}"/usr/lib/
