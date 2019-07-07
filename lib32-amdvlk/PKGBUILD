@@ -74,8 +74,8 @@ build() {
 
 package() {
   install -m755 -d "${pkgdir}"/usr/lib32
-  install -m644 -d "${pkgdir}"/usr/share/vulkan/icd.d
-  install -m644 -d "${pkgdir}"/usr/share/licenses/lib32-amdvlk
+  install -m755 -d "${pkgdir}"/usr/share/vulkan/icd.d
+  install -m755 -d "${pkgdir}"/usr/share/licenses/lib32-amdvlk
 
   install xgl/builds/Release/icd/amdvlk32.so "${pkgdir}"/usr/lib32/
   install AMDVLK/json/Redhat/amd_icd32.json "${pkgdir}"/usr/share/vulkan/icd.d/
