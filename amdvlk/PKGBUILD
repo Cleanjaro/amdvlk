@@ -13,7 +13,7 @@ llpc_commit=aa8a9d7f2b7ad7b81b70e7959e99e3f31f85c211
 spvgen_commit=53245b96b7a647743f50b9d841751f9755002661
 llvm_commit=8118692e8aefbd95f791ff49beddb8ce90e8927c
 pkgver=2019.Q3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="AMD's standalone Vulkan driver"
 arch=(x86_64)
 url="https://github.com/GPUOpen-Drivers"
@@ -42,6 +42,7 @@ prepare() {
   ln -s llpc-${llpc_commit} llpc
   ln -s spvgen-${spvgen_commit} spvgen
   ln -s llvm-${llvm_commit} llvm
+  touch amdPalSettings.cfg
 
   # Disable -Werror, https://github.com/GPUOpen-Drivers/AMDVLK/issues/89
   for i in xgl/icd/CMakeLists.txt llpc/CMakeLists.txt llpc/imported/metrohash/CMakeLists.txt llvm/utils/benchmark/CMakeLists.txt llvm/utils/benchmark/test/CMakeLists.txt pal/src/core/imported/addrlib/CMakeLists.txt pal/src/core/imported/vam/CMakeLists.txt pal/shared/gpuopen/cmake/AMD.cmake
@@ -51,10 +52,15 @@ prepare() {
 }
 
 build() {
+  export CFLAGS="$CFLAGS -fno-plt"
+  export CXXFLAGS="$CXXFLAGS -fno-plt"
+  export LDFLAGS="$LDFLAGS -z now"
+
   msg "building xgl..."
   cd xgl
   cmake -H. -Bbuilds/Release64 \
     -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_XLIB_XRANDR_SUPPORT=On \
     -DBUILD_WAYLAND_SUPPORT=On
 
   cd builds/Release64
@@ -64,13 +70,14 @@ build() {
 
 package() {
   install -m755 -d "${pkgdir}"/usr/lib
-  install -m755 -d "${pkgdir}"/usr/share/vulkan/icd.d
-  install -m755 -d "${pkgdir}"/usr/share/licenses/amdvlk
+  install -m644 -d "${pkgdir}"/usr/share/vulkan/icd.d
+  install -m644 -d "${pkgdir}"/usr/share/licenses/amdvlk
   install -m755 -d "${pkgdir}"/etc/amd
 
   install xgl/builds/Release64/icd/amdvlk64.so "${pkgdir}"/usr/lib/
   install AMDVLK/json/Redhat/amd_icd64.json "${pkgdir}"/usr/share/vulkan/icd.d/
   install AMDVLK/LICENSE.txt "${pkgdir}"/usr/share/licenses/amdvlk/
+  install amdPalSettings.cfg ${pkgdir}/etc/amd/
 
   sed -i "s/\/lib64/\/lib/g" "${pkgdir}"/usr/share/vulkan/icd.d/amd_icd64.json
 }

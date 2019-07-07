@@ -13,7 +13,7 @@ llpc_commit=aa8a9d7f2b7ad7b81b70e7959e99e3f31f85c211
 spvgen_commit=53245b96b7a647743f50b9d841751f9755002661
 llvm_commit=8118692e8aefbd95f791ff49beddb8ce90e8927c
 pkgver=2019.Q3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="AMD's standalone Vulkan driver (32-bit)"
 arch=(x86_64)
 url="https://github.com/GPUOpen-Drivers"
@@ -51,11 +51,16 @@ prepare() {
 }
 
 build() {
+  export CFLAGS="$CFLAGS -fno-plt"
+  export CXXFLAGS="$CXXFLAGS -fno-plt"
+  export LDFLAGS="$LDFLAGS -z now"
+
   msg "building xgl..."
   cd xgl
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
   cmake -H. -Bbuilds/Release \
     -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_XLIB_XRANDR_SUPPORT=On \
     -DBUILD_WAYLAND_SUPPORT=On \
     -DCMAKE_C_FLAGS=-m32 \
     -DCMAKE_CXX_FLAGS=-m32 \
@@ -69,8 +74,8 @@ build() {
 
 package() {
   install -m755 -d "${pkgdir}"/usr/lib32
-  install -m755 -d "${pkgdir}"/usr/share/vulkan/icd.d
-  install -m755 -d "${pkgdir}"/usr/share/licenses/lib32-amdvlk
+  install -m644 -d "${pkgdir}"/usr/share/vulkan/icd.d
+  install -m644 -d "${pkgdir}"/usr/share/licenses/lib32-amdvlk
 
   install xgl/builds/Release/icd/amdvlk32.so "${pkgdir}"/usr/lib32/
   install AMDVLK/json/Redhat/amd_icd32.json "${pkgdir}"/usr/share/vulkan/icd.d/
