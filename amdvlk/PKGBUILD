@@ -6,14 +6,14 @@
 # for the correct commit strings for the current stable build information.
 
 pkgname=amdvlk
-amdvlk_commit=bff1e718f0d2fecf767495841e78deeb7e484347
-xgl_commit=eee58c8e482ac4a6fdc40452cb4ad744395d0f74
-pal_commit=6c8eaa257e6216437fdfe3f17d418eccfe42e0bd
-llpc_commit=aa8a9d7f2b7ad7b81b70e7959e99e3f31f85c211
-spvgen_commit=53245b96b7a647743f50b9d841751f9755002661
-llvm_commit=8118692e8aefbd95f791ff49beddb8ce90e8927c
-pkgver=2019.Q3.1
-pkgrel=2
+amdvlk_commit=4f7b640d4f2ca870ddc7a474ac625cc7f253d5bd
+xgl_commit=2315f2a4de4df53eaa54b56e96332687ed12269f
+pal_commit=ffb21e86238819817075e252ad9b49ea5284968d
+llpc_commit=252b93409b7cc92dacf48a421b9aac2a77629381
+spvgen_commit=051aaa46272aae7808129b98fd9da49f3229eb78
+llvm_commit=d9e4934189845f30428cad6da16e8745540291db
+pkgver=2019.Q3.2
+pkgrel=1
 pkgdesc="AMD's standalone Vulkan driver"
 arch=(x86_64)
 url="https://github.com/GPUOpen-Drivers"
@@ -28,12 +28,12 @@ source=(AMDVLK-${amdvlk_commit}.tar.gz::$url/AMDVLK/archive/${amdvlk_commit}.tar
         llpc-${llpc_commit}.tar.gz::$url/llpc/archive/${llpc_commit}.tar.gz
         spvgen-${spvgen_commit}.tar.gz::$url/spvgen/archive/${spvgen_commit}.tar.gz
         llvm-${llvm_commit}.tar.gz::$url/llvm/archive/${llvm_commit}.tar.gz)
-sha256sums=('323c62305565093958cd2d6ac0b58ed7c3787c1d38d255f77ee1e3bf3f09edd4'
-            '828bf0936e0efc86c40e3abb6f92cc214a493ab8e2ff2054d455bab399ae2d0a'
-            '83a4940d3bd64f38a83e14d7225cce6b2234610dbe6e3d55c50e1adc6126b2d2'
-            'f7efe91134588233e2d3f25ff53068fb0b7c6d144fabf907c7b8c807efe635e8'
-            '253bfaf1fc33c8ef01ca1681a5ea7400fd4ab7373c48e4f79beb10d89455d307'
-            'b0cbcd4d83530ad5bd515642f903837e6cc308eb68da51900208acf9f2dbe351')
+sha256sums=('b6db2aa1c97a31b00c6771de0e89c3712b9eed149523ae9a5dc4d64a27dbe542'
+            '1b01201e15eb62ad3df8b925de5763484570a85a4cdf686efe066e26d0ca70c2'
+            'd0b96d0b37ac24ada16fa030fe80070f39528f69df1c64c3474c3f58b98475ee'
+            'eb0a94288e4bda889d75e287247e63b97a91d9761fb818c9106d4afa490760c3'
+            '6f1242b24197e8f6ff259371773bedcb858dec379eba32f07d150d6eb57e5a2b'
+            'a816af55d118d1ab3f96729c2401568e689190d10388aa4f067917061bbfd271')
 
 prepare() {
   ln -s AMDVLK-${amdvlk_commit} AMDVLK
