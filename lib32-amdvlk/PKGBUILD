@@ -6,13 +6,13 @@
 # for the correct commit strings for the current stable build information.
 
 pkgname=lib32-amdvlk
-amdvlk_commit=4f7b640d4f2ca870ddc7a474ac625cc7f253d5bd
-xgl_commit=2315f2a4de4df53eaa54b56e96332687ed12269f
-pal_commit=ffb21e86238819817075e252ad9b49ea5284968d
-llpc_commit=252b93409b7cc92dacf48a421b9aac2a77629381
-spvgen_commit=051aaa46272aae7808129b98fd9da49f3229eb78
-llvm_commit=d9e4934189845f30428cad6da16e8745540291db
-pkgver=2019.Q3.2
+amdvlk_commit=53d1a7c2970ac7a576d0118323d7b8b081e8c8ba
+xgl_commit=6b0fbc836e01be4b8fb1990b4e31846ec19305bc
+pal_commit=46251728a7137f399b564b0886bd9bf9888c48ef
+llpc_commit=f60ebe48d60ef00e69b399a24e04d600cdcc1f0c
+spvgen_commit=2f31d1170e8a12a66168b23235638c4bbc43ecdc
+llvm_commit=951ae36dc33d628235446a7abe87a1aebf6717e8
+pkgver=2019.Q3.3
 pkgrel=1
 pkgdesc="AMD's standalone Vulkan driver (32-bit)"
 arch=(x86_64)
@@ -27,13 +27,15 @@ source=(AMDVLK-${amdvlk_commit}.tar.gz::$url/AMDVLK/archive/${amdvlk_commit}.tar
         pal-${pal_commit}.tar.gz::$url/pal/archive/${pal_commit}.tar.gz
         llpc-${llpc_commit}.tar.gz::$url/llpc/archive/${llpc_commit}.tar.gz
         spvgen-${spvgen_commit}.tar.gz::$url/spvgen/archive/${spvgen_commit}.tar.gz
-        llvm-${llvm_commit}.tar.gz::$url/llvm/archive/${llvm_commit}.tar.gz)
-sha256sums=('b6db2aa1c97a31b00c6771de0e89c3712b9eed149523ae9a5dc4d64a27dbe542'
-            '1b01201e15eb62ad3df8b925de5763484570a85a4cdf686efe066e26d0ca70c2'
-            'd0b96d0b37ac24ada16fa030fe80070f39528f69df1c64c3474c3f58b98475ee'
-            'eb0a94288e4bda889d75e287247e63b97a91d9761fb818c9106d4afa490760c3'
-            '6f1242b24197e8f6ff259371773bedcb858dec379eba32f07d150d6eb57e5a2b'
-            'a816af55d118d1ab3f96729c2401568e689190d10388aa4f067917061bbfd271')
+        llvm-${llvm_commit}.tar.gz::$url/llvm/archive/${llvm_commit}.tar.gz
+        gcc9-fix.patch)
+sha256sums=('8a634a8764cf2835b16b3adedebd3bda7033ed73c5b2af6b63cf1a7e7773efda'
+            'fee95d0a55cbd9c34aa54c3309ad896d56c287f35bc7cd6bb25bd86f7e0985d6'
+            '6832551a933fd04d8b1d031cf49b86497c17c878675fc641df23c9c9e128d52b'
+            '4d6b623092215bfb8f9f01601db3de2b93cc0bf305173bafeb58c65f32967043'
+            'cc946ad2835e502aca904c5f87802a2004eaed4729cb5c1dc29a5258d1c1e401'
+            '50b25878e19cd8a7d15aad891463fbdac60cbb04b2a4027bc31ff9ca3da4a5f6'
+            'fdb5437052043cd2d35544876c835138ddde8ba5f90ec15c960a962e96490687')
 
 prepare() {
   ln -s AMDVLK-${amdvlk_commit} AMDVLK
@@ -43,11 +45,8 @@ prepare() {
   ln -s spvgen-${spvgen_commit} spvgen
   ln -s llvm-${llvm_commit} llvm
 
-  # Disable -Werror, https://github.com/GPUOpen-Drivers/AMDVLK/issues/89
-  for i in xgl/icd/CMakeLists.txt llpc/CMakeLists.txt llpc/imported/metrohash/CMakeLists.txt llvm/utils/benchmark/CMakeLists.txt llvm/utils/benchmark/test/CMakeLists.txt pal/src/core/imported/addrlib/CMakeLists.txt pal/src/core/imported/vam/CMakeLists.txt pal/shared/gpuopen/cmake/AMD.cmake
-  do
-    sed -i "s/-Werror//g" "$srcdir"/$i
-  done
+  # Fix compiling with GCC9, Thanks void linux team
+  patch -Np1 -i gcc9-fix.patch
 }
 
 build() {
