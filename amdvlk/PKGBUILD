@@ -6,13 +6,13 @@
 # for the correct commit strings for the current stable build information.
 
 pkgname=amdvlk
-amdvlk_commit=ddb9bc059a7f6898d0f915672ec4926a8640b0a6
-xgl_commit=9b632ef4f132bddc94769702ed8b49efbc39d89c
-pal_commit=66e78b997748d03d77e1d706c10f1f17e18e5654
-llpc_commit=0da6ca8e09f41639636a106f9b9ca74df50321ce
+xgl_commit=331558e93794068a786bf699d3fe23bb11bac021
+pal_commit=68b57dba33a4d922e8f1ef1b3781c2f659ffbd1c
+llpc_commit=4fa48ef1cf0f81eafdb56df91c2f2180d4865101
 spvgen_commit=2f31d1170e8a12a66168b23235638c4bbc43ecdc
 llvm_commit=9bc5dd4450a6361faf5c5661056a7ee494fad830
-pkgver=2019.Q3.4
+metrohash_commit=2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
+pkgver=2019.Q3.5
 pkgrel=1
 pkgdesc="AMD's standalone Vulkan driver"
 arch=(x86_64)
@@ -21,33 +21,35 @@ license=('MIT')
 depends=('vulkan-icd-loader')
 provides=('vulkan-amdvlk' 'vulkan-driver')
 conflicts=('vulkan-amdvlk')
-makedepends=('dri2proto' 'xorg-server-devel' 'cmake' 'python' 'libxml2' 'wayland' 'libdrm' 'libxrandr')
-source=(AMDVLK-${amdvlk_commit}.tar.gz::$url/AMDVLK/archive/${amdvlk_commit}.tar.gz
-        xgl-${xgl_commit}.tar.gz::$url/xgl/archive/${xgl_commit}.tar.gz
-        pal-${pal_commit}.tar.gz::$url/pal/archive/${pal_commit}.tar.gz
-        llpc-${llpc_commit}.tar.gz::$url/llpc/archive/${llpc_commit}.tar.gz
-        spvgen-${spvgen_commit}.tar.gz::$url/spvgen/archive/${spvgen_commit}.tar.gz
-        llvm-${llvm_commit}.tar.gz::$url/llvm/archive/${llvm_commit}.tar.gz
-        gcc9-fix.patch)
-sha256sums=('06fac807fd9c4b951188a081641abcb575b1e98d205ec7ff390644a18fcc951b'
-            '6baede0581d63bdf88cc72c8c496b0cef534ee244dd4f74bcb39a9e0e0beeacd'
-            'e8a29b20a166cb7139157a40e88b8087ed33097871dcaee1bfda61b6a417886f'
-            '00bf10ff483ba5f6420fb3bfe34f7ce77c6d33515840df64ed1e2858e0eeb831'
+makedepends=('dri2proto' 'xorg-server-devel' 'cmake' 'ninja' 'python' 'libxml2' 'wayland' 'libdrm' 'libxrandr')
+source=(AMDVLK-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/AMDVLK/archive/v-${pkgver}.tar.gz
+        xgl-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/xgl/archive/${xgl_commit}.tar.gz
+        pal-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/pal/archive/${pal_commit}.tar.gz
+        llpc-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llpc/archive/${llpc_commit}.tar.gz
+        spvgen-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/spvgen/archive/${spvgen_commit}.tar.gz
+        llvm-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llvm/archive/${llvm_commit}.tar.gz
+        MetroHash-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/metrohash/archive/${metrohash_commit}.tar.gz)
+
+sha256sums=('383d43ddcff3295bb8dc85bce2a376fbde9f2aa3535be9e4dbf67f745c40ff41'
+            '939a2cf69d840e01da8b3e69f5ffe1f852f9d2919cdbc8aa4ade7cff7ac56906'
+            '7648ca7761b588b6025f8fe16fcf4216bf7e1fe53c6568377f5cca98feca9627'
+            'abe541ef6cd4fa3ca1eaab52412caa29e2adedec0fab40894aef88d33deee584'
             'cc946ad2835e502aca904c5f87802a2004eaed4729cb5c1dc29a5258d1c1e401'
             'efbde2752044ec74d522c160899491105dbc77bb8a08ff64c274d2b94a6916d1'
-            'fdb5437052043cd2d35544876c835138ddde8ba5f90ec15c960a962e96490687')
+            'e8ecf026584dd953e39c3abba2eb04d28b28ed4577482ee70265f0d421fef398')
 
 prepare() {
-  ln -s AMDVLK-${amdvlk_commit} AMDVLK
-  ln -s xgl-${xgl_commit} xgl
-  ln -s pal-${pal_commit} pal
-  ln -s llpc-${llpc_commit} llpc
-  ln -s spvgen-${spvgen_commit} spvgen
-  ln -s llvm-${llvm_commit} llvm
+  ln -sf ${srcdir}/AMDVLK-v-${pkgver} ${srcdir}/AMDVLK
+  ln -sf ${srcdir}/xgl-${xgl_commit} ${srcdir}/xgl
+  ln -sf ${srcdir}/pal-${pal_commit} ${srcdir}/pal
+  ln -sf ${srcdir}/llpc-${llpc_commit} ${srcdir}/llpc
+  ln -sf ${srcdir}/spvgen-${spvgen_commit} ${srcdir}/spvgen
+  ln -sf ${srcdir}/llvm-${llvm_commit} ${srcdir}/llvm
+  ln -sf ${srcdir}/MetroHash-${metrohash_commit} ${srcdir}/metrohash
   touch amdPalSettings.cfg
 
-  # Fix compiling with GCC9, Thanks void linux team
-  patch -Np1 -i gcc9-fix.patch
+  #remove -Werror to build with gcc9 
+  sed -i "s/-Werror//g" $srcdir/pal/shared/gpuopen/cmake/AMD.cmake
 }
 
 build() {
@@ -60,10 +62,11 @@ build() {
   cmake -H. -Bbuilds/Release64 \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_XLIB_XRANDR_SUPPORT=On \
-    -DBUILD_WAYLAND_SUPPORT=On
+    -DBUILD_WAYLAND_SUPPORT=On \
+    -DXGL_METROHASH_PATH=${srcdir}/metrohash \
+    -G Ninja
 
-  cd builds/Release64
-  make
+  ninja -C builds/Release64
   msg "building xgl finished!"
 }
 
