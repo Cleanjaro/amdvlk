@@ -5,7 +5,8 @@
 # Read default.xml at https://github.com/GPUOpen-Drivers/AMDVLK
 # for the correct commit strings for the current stable build information.
 
-pkgname=lib32-amdvlk
+pkgbase=amdvlk
+pkgname=($pkgbase lib32-$pkgbase)
 xgl_commit=331558e93794068a786bf699d3fe23bb11bac021
 pal_commit=68b57dba33a4d922e8f1ef1b3781c2f659ffbd1c
 llpc_commit=4fa48ef1cf0f81eafdb56df91c2f2180d4865101
@@ -14,14 +15,12 @@ llvm_commit=9bc5dd4450a6361faf5c5661056a7ee494fad830
 metrohash_commit=2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 pkgver=2019.Q3.5
 pkgrel=1
-pkgdesc="AMD's standalone Vulkan driver (32-bit)"
+pkgdesc="AMD's standalone Vulkan driver"
 arch=(x86_64)
 url="https://github.com/GPUOpen-Drivers"
 license=('MIT')
-depends=('lib32-vulkan-icd-loader')
-provides=('lib32-vulkan-amdvlk' 'lib32-vulkan-driver')
-conflicts=('lib32-vulkan-amdvlk')
-makedepends=('dri2proto' 'xorg-server-devel' 'cmake' 'ninja' 'python' 'lib32-libxml2' 'lib32-libdrm' 'libxrandr')
+makedepends=('cmake' 'dri2proto' 'libdrm' 'lib32-libdrm' 'libxml2' 'lib32-libxml2'
+             'libxrandr' 'ninja' 'python' 'wayland' 'xorg-server-devel')
 source=(AMDVLK-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/AMDVLK/archive/v-${pkgver}.tar.gz
         xgl-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/xgl/archive/${xgl_commit}.tar.gz
         pal-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/pal/archive/${pal_commit}.tar.gz
@@ -46,6 +45,7 @@ prepare() {
   ln -sf ${srcdir}/spvgen-${spvgen_commit} ${srcdir}/spvgen
   ln -sf ${srcdir}/llvm-${llvm_commit} ${srcdir}/llvm
   ln -sf ${srcdir}/MetroHash-${metrohash_commit} ${srcdir}/metrohash
+  touch amdPalSettings.cfg
 
   #remove -Werror to build with gcc9 
   sed -i "s/-Werror//g" $srcdir/pal/shared/gpuopen/cmake/AMD.cmake
@@ -56,8 +56,21 @@ build() {
   export CXXFLAGS="$CXXFLAGS -fno-plt"
   export LDFLAGS="$LDFLAGS -z now"
 
-  msg "building xgl..."
+  # 64-bit
+  msg "building 64-bit xgl..."
   cd xgl
+  cmake -H. -Bbuilds/Release64 \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_XLIB_XRANDR_SUPPORT=On \
+    -DBUILD_WAYLAND_SUPPORT=On \
+    -DXGL_METROHASH_PATH=${srcdir}/metrohash \
+    -G Ninja
+
+  ninja -C builds/Release64
+  msg "building 64-bit xgl finished!"
+
+  # 32-bit
+  msg "building 32-bit xgl..."
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
   cmake -H. -Bbuilds/Release \
     -DCMAKE_BUILD_TYPE=Release \
@@ -71,10 +84,33 @@ build() {
     -G Ninja
 
   ninja -C builds/Release
-  msg "building xgl finished!"
+  msg "building 32-bit xgl finished!"
 }
 
-package() {
+package_amdvlk() {
+  depends=('vulkan-icd-loader')
+  provides=('vulkan-amdvlk' 'vulkan-driver')
+  conflicts=('vulkan-amdvlk')
+
+  install -m755 -d "${pkgdir}"/usr/lib
+  install -m755 -d "${pkgdir}"/usr/share/vulkan/icd.d
+  install -m755 -d "${pkgdir}"/usr/share/licenses/amdvlk
+  install -m755 -d "${pkgdir}"/etc/amd
+
+  install xgl/builds/Release64/icd/amdvlk64.so "${pkgdir}"/usr/lib/
+  install AMDVLK/json/Redhat/amd_icd64.json "${pkgdir}"/usr/share/vulkan/icd.d/
+  install AMDVLK/LICENSE.txt "${pkgdir}"/usr/share/licenses/amdvlk/
+  install amdPalSettings.cfg "${pkgdir}"/etc/amd/
+
+  sed -i "s/\/lib64/\/lib/g" "${pkgdir}"/usr/share/vulkan/icd.d/amd_icd64.json
+}
+
+package_lib32-amdvlk() {
+  pkgdesc="AMD's standalone Vulkan driver (32-bit)"
+  depends=('lib32-vulkan-icd-loader')
+  provides=('lib32-vulkan-amdvlk' 'lib32-vulkan-driver')
+  conflicts=('lib32-vulkan-amdvlk')
+
   install -m755 -d "${pkgdir}"/usr/lib32
   install -m755 -d "${pkgdir}"/usr/share/vulkan/icd.d
   install -m755 -d "${pkgdir}"/usr/share/licenses/lib32-amdvlk
