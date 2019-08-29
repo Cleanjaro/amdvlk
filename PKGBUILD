@@ -21,13 +21,13 @@ url="https://github.com/GPUOpen-Drivers"
 license=('MIT')
 makedepends=('cmake' 'dri2proto' 'libdrm' 'lib32-libdrm' 'libxml2' 'lib32-libxml2'
              'libxrandr' 'ninja' 'python' 'wayland' 'xorg-server-devel')
-source=(AMDVLK-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/AMDVLK/archive/v-${pkgver}.tar.gz
-        xgl-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/xgl/archive/${xgl_commit}.tar.gz
-        pal-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/pal/archive/${pal_commit}.tar.gz
-        llpc-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llpc/archive/${llpc_commit}.tar.gz
-        spvgen-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/spvgen/archive/${spvgen_commit}.tar.gz
-        llvm-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llvm/archive/${llvm_commit}.tar.gz
-        MetroHash-$pkgname-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/metrohash/archive/${metrohash_commit}.tar.gz)
+source=(AMDVLK-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/AMDVLK/archive/v-${pkgver}.tar.gz
+        xgl-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/xgl/archive/${xgl_commit}.tar.gz
+        pal-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/pal/archive/${pal_commit}.tar.gz
+        llpc-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llpc/archive/${llpc_commit}.tar.gz
+        spvgen-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/spvgen/archive/${spvgen_commit}.tar.gz
+        llvm-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llvm/archive/${llvm_commit}.tar.gz
+        MetroHash-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/metrohash/archive/${metrohash_commit}.tar.gz)
 
 sha256sums=('383d43ddcff3295bb8dc85bce2a376fbde9f2aa3535be9e4dbf67f745c40ff41'
             '939a2cf69d840e01da8b3e69f5ffe1f852f9d2919cdbc8aa4ade7cff7ac56906'
