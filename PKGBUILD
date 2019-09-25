@@ -1,4 +1,5 @@
 # Maintainer:  David Spink <yorper_protonmail.com>
+# Contributor: Jonathon Fernyhough <jonathon_manjaro.org>
 # Contributor: Christoph Haag <haagch@studi.informatik.uni-stuttgart.de>
 # Contributor: Laurent Carlier <lordheavym@gmail.com>
 
