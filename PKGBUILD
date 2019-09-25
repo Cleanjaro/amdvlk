@@ -12,7 +12,7 @@ pal_commit=88d997710b4e405f3a8e3fd60a38afee9e3e77e2
 llpc_commit=ec210a78b6a280b00fb1765dd588c3970b6dc818
 spvgen_commit=2f31d1170e8a12a66168b23235638c4bbc43ecdc
 llvm_commit=9bc5dd4450a6361faf5c5661056a7ee494fad830
-metrohash_commit=690a521d9beb2e1050cc8f273fdabc13b31bf8f6
+metrohash_commit=2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 cwpack_commit=b601c88aeca7a7b08becb3d32709de383c8ee428
 pkgver=2019.Q3.6
 pkgrel=1
@@ -56,8 +56,8 @@ prepare() {
 }
 
 build() {
-  export CFLAGS="$CFLAGS -fno-plt"
-  export CXXFLAGS="$CXXFLAGS -fno-plt"
+  export CFLAGS="$CFLAGS -fno-plt -mno-avx"
+  export CXXFLAGS="$CXXFLAGS -fno-plt -mno-avx"
   export LDFLAGS="$LDFLAGS -z now"
 
   # 64-bit
