@@ -7,13 +7,14 @@
 
 pkgbase=amdvlk
 pkgname=($pkgbase lib32-$pkgbase)
-xgl_commit=331558e93794068a786bf699d3fe23bb11bac021
-pal_commit=68b57dba33a4d922e8f1ef1b3781c2f659ffbd1c
-llpc_commit=4fa48ef1cf0f81eafdb56df91c2f2180d4865101
+xgl_commit=2cb5558b94c5dc839e093cb439057a1802426c8e
+pal_commit=88d997710b4e405f3a8e3fd60a38afee9e3e77e2
+llpc_commit=ec210a78b6a280b00fb1765dd588c3970b6dc818
 spvgen_commit=2f31d1170e8a12a66168b23235638c4bbc43ecdc
 llvm_commit=9bc5dd4450a6361faf5c5661056a7ee494fad830
-metrohash_commit=2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
-pkgver=2019.Q3.5
+metrohash_commit=690a521d9beb2e1050cc8f273fdabc13b31bf8f6
+cwpack_commit=b601c88aeca7a7b08becb3d32709de383c8ee428
+pkgver=2019.Q3.6
 pkgrel=1
 pkgdesc="AMD's standalone Vulkan driver"
 arch=(x86_64)
@@ -27,15 +28,17 @@ source=(AMDVLK-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/AMDVLK/archive
         llpc-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llpc/archive/${llpc_commit}.tar.gz
         spvgen-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/spvgen/archive/${spvgen_commit}.tar.gz
         llvm-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llvm/archive/${llvm_commit}.tar.gz
-        MetroHash-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/metrohash/archive/${metrohash_commit}.tar.gz)
+        MetroHash-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/metrohash/archive/${metrohash_commit}.tar.gz
+        CWPack-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/cwpack/archive/${cwpack_commit}.tar.gz)
 
-sha256sums=('383d43ddcff3295bb8dc85bce2a376fbde9f2aa3535be9e4dbf67f745c40ff41'
-            '939a2cf69d840e01da8b3e69f5ffe1f852f9d2919cdbc8aa4ade7cff7ac56906'
-            '7648ca7761b588b6025f8fe16fcf4216bf7e1fe53c6568377f5cca98feca9627'
-            'abe541ef6cd4fa3ca1eaab52412caa29e2adedec0fab40894aef88d33deee584'
+sha256sums=('1970d7cdf31e564c7a98737442fc7ed3593da24fb7e4dabe26ec120017aa0538'
+            'fb9a6a497f488a3d9682b51ec9d615199b2f6770446b9cec47bd6a7c81278269'
+            '063f3446339a42b08128b4acb5b74e846a0bb5ebd9d3aae3feec5011a1797f1d'
+            '88ae1c7d465e6313c324e2802ffa024fc3e1ed588ac4b48170c736fea9181e93'
             'cc946ad2835e502aca904c5f87802a2004eaed4729cb5c1dc29a5258d1c1e401'
             'efbde2752044ec74d522c160899491105dbc77bb8a08ff64c274d2b94a6916d1'
-            'e8ecf026584dd953e39c3abba2eb04d28b28ed4577482ee70265f0d421fef398')
+            'a5c1e77efd593853ee93a8f168fb7826baae52ca56df1d46f9ccde3d4e1f6c12'
+            '58ca397f33d62bcfecaecd89eb4ad466a6c33e1c619e5cf742822074f1f7d664')
 
 prepare() {
   ln -sf ${srcdir}/AMDVLK-v-${pkgver} ${srcdir}/AMDVLK
@@ -44,7 +47,8 @@ prepare() {
   ln -sf ${srcdir}/llpc-${llpc_commit} ${srcdir}/llpc
   ln -sf ${srcdir}/spvgen-${spvgen_commit} ${srcdir}/spvgen
   ln -sf ${srcdir}/llvm-${llvm_commit} ${srcdir}/llvm
-  ln -sf ${srcdir}/MetroHash-${metrohash_commit} ${srcdir}/metrohash
+  ln -sf ${srcdir}/MetroHash-${metrohash_commit} ${srcdir}/MetroHash
+  ln -sf ${srcdir}/CWPack-${cwpack_commit} ${srcdir}/CWPack
   touch amdPalSettings.cfg
 
   #remove -Werror to build with gcc9 
@@ -63,7 +67,8 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_XLIB_XRANDR_SUPPORT=On \
     -DBUILD_WAYLAND_SUPPORT=On \
-    -DXGL_METROHASH_PATH=${srcdir}/metrohash \
+    -DXGL_METROHASH_PATH=${srcdir}/MetroHash \
+    -DXGL_CWPACK_PATH=${srcdir}/CWPack \
     -G Ninja
 
   ninja -C builds/Release64
