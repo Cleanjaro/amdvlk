@@ -28,8 +28,8 @@ source=(AMDVLK-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/AMDVLK/archive
         llpc-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llpc/archive/${llpc_commit}.tar.gz
         spvgen-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/spvgen/archive/${spvgen_commit}.tar.gz
         llvm-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llvm/archive/${llvm_commit}.tar.gz
-        MetroHash-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/metrohash/archive/${metrohash_commit}.tar.gz
-        CWPack-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/cwpack/archive/${cwpack_commit}.tar.gz)
+        MetroHash-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/MetroHash/archive/${metrohash_commit}.tar.gz
+        CWPack-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/CWPack/archive/${cwpack_commit}.tar.gz)
 
 sha256sums=('1970d7cdf31e564c7a98737442fc7ed3593da24fb7e4dabe26ec120017aa0538'
             'fb9a6a497f488a3d9682b51ec9d615199b2f6770446b9cec47bd6a7c81278269'
@@ -85,7 +85,8 @@ build() {
     -DCMAKE_CXX_FLAGS=-m32 \
     -DLLVM_TARGET_ARCH:STRING=i686 \
     -DLLVM_DEFAULT_TARGET_TRIPLE="i686-pc-linux-gnu" \
-    -DXGL_METROHASH_PATH=${srcdir}/metrohash \
+    -DXGL_METROHASH_PATH=${srcdir}/MetroHash \
+    -DXGL_CWPACK_PATH=${srcdir}/CWPack \
     -G Ninja
 
   ninja -C builds/Release
