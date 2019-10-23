@@ -8,14 +8,14 @@
 
 pkgbase=amdvlk
 pkgname=($pkgbase lib32-$pkgbase)
-xgl_commit=2cb5558b94c5dc839e093cb439057a1802426c8e
-pal_commit=88d997710b4e405f3a8e3fd60a38afee9e3e77e2
-llpc_commit=ec210a78b6a280b00fb1765dd588c3970b6dc818
-spvgen_commit=2f31d1170e8a12a66168b23235638c4bbc43ecdc
-llvm_commit=1fc1a7d4248b4749c3df21eb48f7ae97b6cddf74
+xgl_commit=19a031d9f73b95101fd4d3d594aca27c00feb180
+pal_commit=39abe2297ca58a2b84dcd9bc5e238fbc399bd6e0
+llpc_commit=3f15347d38da804814fdd9e24e2875ee0b2b9245
+spvgen_commit=f1bc2ba988273c3724afffe72fe9cd933a022ce7
+llvmproject_commit=40fbaf4c5446a361269c241d9112fff26575b5d0
 metrohash_commit=2b6fee002db6cc92345b02aeee963ebaaf4c0e2f
 cwpack_commit=b601c88aeca7a7b08becb3d32709de383c8ee428
-pkgver=2019.Q3.6
+pkgver=2019.Q4.1
 pkgrel=1
 pkgdesc="AMD's standalone Vulkan driver"
 arch=(x86_64)
@@ -24,20 +24,20 @@ license=('MIT')
 makedepends=('cmake' 'dri2proto' 'libdrm' 'lib32-libdrm' 'libxml2' 'lib32-libxml2'
              'libxrandr' 'ninja' 'python' 'wayland' 'xorg-server-devel')
 source=(AMDVLK-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/AMDVLK/archive/v-${pkgver}.tar.gz
-        xgl-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/xgl/archive/${xgl_commit}.tar.gz
-        pal-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/pal/archive/${pal_commit}.tar.gz
-        llpc-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llpc/archive/${llpc_commit}.tar.gz
-        spvgen-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/spvgen/archive/${spvgen_commit}.tar.gz
-        llvm-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/llvm/archive/${llvm_commit}.tar.gz
-        MetroHash-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/MetroHash/archive/${metrohash_commit}.tar.gz
-        CWPack-$pkgver.tar.gz::https://github.com/GPUOpen-Drivers/CWPack/archive/${cwpack_commit}.tar.gz)
+        xgl-${xgl_commit}.tar.gz::https://github.com/GPUOpen-Drivers/xgl/archive/${xgl_commit}.tar.gz
+        pal-${pal_commit}.tar.gz::https://github.com/GPUOpen-Drivers/pal/archive/${pal_commit}.tar.gz
+        llpc-${llpc_commit}.tar.gz::https://github.com/GPUOpen-Drivers/llpc/archive/${llpc_commit}.tar.gz
+        spvgen-${spvgen_commit}.tar.gz::https://github.com/GPUOpen-Drivers/spvgen/archive/${spvgen_commit}.tar.gz
+        llvm-project-${llvmproject_commit}.tar.gz::https://github.com/GPUOpen-Drivers/llvm-project/archive/${llvmproject_commit}.tar.gz
+        MetroHash-${metrohash_commit}.tar.gz::https://github.com/GPUOpen-Drivers/MetroHash/archive/${metrohash_commit}.tar.gz
+        CWPack-${cwpack_commit}.tar.gz::https://github.com/GPUOpen-Drivers/CWPack/archive/${cwpack_commit}.tar.gz)
 
-sha256sums=('9afb90b56c3c1213c97ef3364b1d31d0e85a81469c861b43dc389af5672c6331'
-            'fb9a6a497f488a3d9682b51ec9d615199b2f6770446b9cec47bd6a7c81278269'
-            '063f3446339a42b08128b4acb5b74e846a0bb5ebd9d3aae3feec5011a1797f1d'
-            '88ae1c7d465e6313c324e2802ffa024fc3e1ed588ac4b48170c736fea9181e93'
-            'cc946ad2835e502aca904c5f87802a2004eaed4729cb5c1dc29a5258d1c1e401'
-            '06104277583082701ca55c28093005919eead930fe93b8737e8e444628100535'
+sha256sums=('2265bd0be973d4511cd47da29052b368369e5ac4133f3b08ab8c89c51d759986'
+            '47fdcb4ed0c9b2e1f61abe761bab912ca228dfd6103c2070c94244c6a2f13b5e'
+            '3def3a94e20dbb67cb4effdacc4c180ebf5bf30a4ae27ad6849cd32aa0628463'
+            'd1957eb1aaaab89aab78f3d375cea93c4b91e47f602627b048f0fb71d8e7eb3d'
+            '77a4cad8691960b825e86b624bb5433f5098b8a49cb0d758e17c6d59e25a9361'
+            '6f469cac7c2deaff595cd689a83067da6cfbee0f97362f6fa9f6c50b5bb23b56'
             'e8ecf026584dd953e39c3abba2eb04d28b28ed4577482ee70265f0d421fef398'
             '58ca397f33d62bcfecaecd89eb4ad466a6c33e1c619e5cf742822074f1f7d664')
 
@@ -47,7 +47,7 @@ prepare() {
   ln -sf ${srcdir}/pal-${pal_commit} ${srcdir}/pal
   ln -sf ${srcdir}/llpc-${llpc_commit} ${srcdir}/llpc
   ln -sf ${srcdir}/spvgen-${spvgen_commit} ${srcdir}/spvgen
-  ln -sf ${srcdir}/llvm-${llvm_commit} ${srcdir}/llvm
+  ln -sf ${srcdir}/llvm-project-${llvmproject_commit} ${srcdir}/llvm-project
   ln -sf ${srcdir}/MetroHash-${metrohash_commit} ${srcdir}/MetroHash
   ln -sf ${srcdir}/CWPack-${cwpack_commit} ${srcdir}/CWPack
   touch amdPalSettings.cfg
